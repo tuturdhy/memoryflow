@@ -59,7 +59,7 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
     `);
 
     res.status(200).json({ success: true, message: 'Database initialized' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+} catch (error) {
+    res.status(500).json({ error: error instanceof Error ? error.message : 'Unknown error' });
   }
 }
