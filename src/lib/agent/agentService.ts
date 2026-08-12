@@ -214,7 +214,7 @@ Always be truthful about what you remember and do not remember.`;
   private static async extractMemories(
     userId: string,
     userMessage: string,
-    agentReasoning: string
+    _agentReasoning: string
   ): Promise<{ created: string[]; updated: string[] }> {
     const created: string[] = [];
     const updated: string[] = [];
