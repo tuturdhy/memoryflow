@@ -111,7 +111,7 @@ export class AgentService {
         if (m && m.id) memoryMap.set(m.id, m);
       });
 
-      importantResult.rows.forEach((m) => {
+      importantResult.rows.forEach((m: any) => {
         if (m && m.id) memoryMap.set(m.id, m);
       });
 
