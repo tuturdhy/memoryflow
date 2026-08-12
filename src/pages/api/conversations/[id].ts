@@ -13,7 +13,7 @@ export default async function handler(
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const userId = session.user.id;
+  const userId = session.user.email;  // ✅ correct!
   const { id } = req.query;
 
   if (!id || typeof id !== 'string') {

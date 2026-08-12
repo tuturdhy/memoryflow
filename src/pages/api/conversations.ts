@@ -14,7 +14,7 @@ export default async function handler(
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const userId = session.user.id;
+  const userId = session.user.email;
 
   try {
     if (req.method === 'GET') {
