@@ -1,6 +1,6 @@
 import { query } from '@/lib/db/connection';
 
-export default async function handler(req, res) {
+export default async function handler(_req, res) {
   try {
     // Crée les tables
     await query(`
