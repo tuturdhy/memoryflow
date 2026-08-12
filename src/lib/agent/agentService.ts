@@ -216,9 +216,19 @@ Always be truthful about what you remember and do not remember.`;
   ): Promise<{ created: string[]; updated: string[] }> {
     const created: string[] = [];
     const updated: string[] = [];
-
+  
     try {
-      // Simple pattern-based memory extraction
+      console.log('\n=====================================');
+      console.log('🔍 EXTRACT MEMORIES START');
+      console.log('👤 userId:', userId, '| Type:', typeof userId);
+      console.log('💬 Message length:', userMessage.length);
+      console.log('💬 Message:', userMessage.substring(0, 100));
+      
+      if (!userId) {
+        console.error('❌ ERROR: userId is NULL or UNDEFINED!');
+        return { created, updated };
+      }
+  
       const patterns = [
         {
           type: 'goal',
@@ -226,14 +236,14 @@ Always be truthful about what you remember and do not remember.`;
         },
         {
           type: 'preference',
-          regex: /prefer|like|enjoy|love|favorite|enjoy|enjoy working/i,
+          regex: /prefer|like|enjoy|love|favorite|enjoy working/i,
         },
         {
           type: 'skill',
           regex: /can|able to|know|learned|experience|proficient|skilled/i,
         },
       ];
-
+  
       let memoryType = 'knowledge';
       for (const pattern of patterns) {
         if (pattern.regex.test(userMessage)) {
@@ -241,27 +251,44 @@ Always be truthful about what you remember and do not remember.`;
           break;
         }
       }
-
-      // If message is substantial, save it
-      if (userMessage.length > 30) {
+  
+      console.log('🏷️ Memory type:', memoryType);
+  
+      if (userMessage.length > 10) {
         const memoryId = uuidv4();
-
-        await query(
-          `INSERT INTO memories (id, user_id, type, content, importance, status)
-           VALUES ($1, $2, $3, $4, $5, 'active')`,
-          [memoryId, userId, memoryType, userMessage, 3]
-        );
-
-        created.push(memoryId);
+        console.log('💾 Saving memory with ID:', memoryId);
+        console.log('📊 Parameters: [id, userId, type, content, importance]');
+        console.log('   [', memoryId, ',', userId, ',', memoryType, ', "...text...", 4 ]');
+  
+        try {
+          const result = await query(
+            `INSERT INTO memories (id, user_id, type, content, importance, status)
+             VALUES ($1, $2, $3, $4, $5, 'active')`,
+            [memoryId, userId, memoryType, userMessage, 4]
+          );
+  
+          console.log('✅ Database INSERT SUCCESS!');
+          created.push(memoryId);
+        } catch (dbError: any) {
+          console.error('❌ DATABASE ERROR in INSERT:');
+          console.error('   Code:', dbError.code);
+          console.error('   Message:', dbError.message);
+          throw dbError;
+        }
+      } else {
+        console.log('⚠️ Message too short (<30 chars), skipping');
       }
-
+  
+      console.log('✅ EXTRACT MEMORIES END - Created:', created.length);
+      console.log('=====================================\n');
       return { created, updated };
-    } catch (error) {
-      console.error('Error extracting memories:', error);
+    } catch (error: any) {
+      console.error('❌ FINAL ERROR in extractMemories:');
+      console.error('   Error:', error.message);
+      console.error('   Stack:', error.stack);
       return { created, updated };
     }
   }
-
   /**
    * Store message in conversation
    */
