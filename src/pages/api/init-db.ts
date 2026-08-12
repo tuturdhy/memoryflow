@@ -1,6 +1,7 @@
 import { query } from '@/lib/db/connection';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(_req, res) {
+export default async function handler(_req: NextApiRequest, res: NextApiResponse) {
   try {
     // Crée les tables
     await query(`
