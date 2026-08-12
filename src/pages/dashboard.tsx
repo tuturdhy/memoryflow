@@ -67,7 +67,6 @@ export default function DashboardPage({ userId }: DashboardPageProps) {
   const fetchMemories = async () => {
     try {
       setLoading(true);
-      const params = new URLSearchParams({ userId });
       const response = await fetch('/api/memories', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
