@@ -24,7 +24,7 @@ interface ChatResponse {
 
 export const chatHandler: Handler<APIGatewayProxyEvent, APIGatewayProxyResult> = async (
   event,
-  context
+  _context
 ): Promise<APIGatewayProxyResult> => {
   try {
     // Parse request body
