@@ -293,14 +293,12 @@ Always be truthful about what you remember and do not remember.`;
     contextMemories: any[]
   ): Promise<void> {
     try {
-      const memoryIds = contextMemories.map((m) => m.id);
-
+      // Just update the conversation's updated_at timestamp
+      // Don't try to store context_memories if the table doesn't have it
       await query(
-        `INSERT INTO agent_state (id, user_id, conversation_id, context_memories)
-         VALUES ($1, $2, $3, $4)
-         ON CONFLICT (user_id, conversation_id)
-         DO UPDATE SET context_memories = $4`,
-        [uuidv4(), userId, conversationId, JSON.stringify(memoryIds)]
+        `UPDATE conversations SET updated_at = CURRENT_TIMESTAMP 
+         WHERE id = $1 AND user_id = $2`,
+        [conversationId, userId]
       );
     } catch (error) {
       console.error('Error updating agent state:', error);
