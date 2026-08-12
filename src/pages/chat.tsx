@@ -426,7 +426,7 @@ export default function ChatPage() {
             Memory Dashboard
           </Link>
           <button
-            onClick={() => signOut({ redirect: true, callbackUrl: '/' })}
+            onClick={() => signOut({ redirect: true, callbackUrl: 'https://memoryflow-dusky.vercel.app/' })}
             className="w-full flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-red-50 text-red-600 font-semibold transition"
           >
             <FiLogOut size={20} />
