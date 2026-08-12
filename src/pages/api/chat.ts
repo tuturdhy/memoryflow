@@ -17,7 +17,7 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const userId = session.user.id;
+  const userId = session.user.email;
   const { message, conversationId } = req.body;
 
   if (!message) {
