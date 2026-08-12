@@ -10,7 +10,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    if (session?.user?.id) {
+    if (session?.user?.email) {
       router.push('/chat');
     }
   }, [session, router]);

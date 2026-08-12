@@ -47,10 +47,10 @@ export default function ChatPage() {
 
   // Load conversations on mount
   useEffect(() => {
-    if (session?.user?.id) {
+    if (session?.user?.email) {
       loadConversations();
     }
-  }, [session?.user?.id]);
+  }, [session?.user?.email]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function ChatPage() {
 
   // Initialize conversation
   useEffect(() => {
-    if (!session?.user?.id) return;
+    if (!session?.user?.email) return;
 
     const initConversation = async () => {
       try {
@@ -88,7 +88,7 @@ export default function ChatPage() {
     };
 
     initConversation();
-  }, [session?.user?.id]);
+  }, [session?.user?.email]);
 
   // Load conversations from API
   const loadConversations = async () => {
@@ -155,7 +155,7 @@ export default function ChatPage() {
 
   // Send message
   const handleSend = async () => {
-    if (!input.trim() || !session?.user?.id) return;
+    if (!input.trim() || !session?.user?.email) return;
 
     const messageContent = input;
     const isFirstMessage = messages.length === 0;

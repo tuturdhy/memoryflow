@@ -1,6 +1,6 @@
 import Groq from 'groq-sdk';
 import { query } from '@/lib/db/connection';
-import { EmbeddingService } from '@/lib/memory/embeddingService';
+import { VectorService } from '@/lib/memory/vectorService';
 import { v4 as uuidv4 } from 'uuid';
 
 const groq = new Groq({
@@ -52,8 +52,7 @@ export class AgentService {
       // Step 4: Extract potential memories from user message
       const extractedMemories = await this.extractMemories(
         userId,
-        userMessage,
-        llmResponse.reasoning
+        userMessage
       );
 
       response.memoriesCreated = extractedMemories.created;
@@ -89,7 +88,7 @@ export class AgentService {
       const maxContexts = parseInt(process.env.MAX_MEMORY_CONTEXTS || '5');
 
       // Use keyword search instead of semantic search
-      const keywordResults = await EmbeddingService.keywordSearch(
+      const keywordResults = await VectorService.keywordSearch(
         userId,
         userMessage,
         maxContexts

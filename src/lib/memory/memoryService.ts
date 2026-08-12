@@ -1,6 +1,5 @@
 import { query } from '@/lib/db/connection';
 import { v4 as uuidv4 } from 'uuid';
-import { EmbeddingService } from './embeddingService';
 
 export class MemoryService {
   /**
