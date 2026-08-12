@@ -261,7 +261,7 @@ Always be truthful about what you remember and do not remember.`;
         console.log('   [', memoryId, ',', userId, ',', memoryType, ', "...text...", 4 ]');
   
         try {
-          const result = await query(
+          await query(
             `INSERT INTO memories (id, user_id, type, content, importance, status)
              VALUES ($1, $2, $3, $4, $5, 'active')`,
             [memoryId, userId, memoryType, userMessage, 4]
