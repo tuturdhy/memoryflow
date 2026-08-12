@@ -290,7 +290,7 @@ Always be truthful about what you remember and do not remember.`;
   private static async updateAgentState(
     userId: string,
     conversationId: string,
-    contextMemories: any[]
+    _contextMemories: any[]
   ): Promise<void> {
     try {
       // Just update the conversation's updated_at timestamp
