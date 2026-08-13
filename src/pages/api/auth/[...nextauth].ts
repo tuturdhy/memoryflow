@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { query } from "@/lib/db/connection";
+import { getUUIDFromEmail } from "@/lib/auth-utils";
 import bcrypt from "bcryptjs";
 
 export const authOptions = {
@@ -60,15 +61,31 @@ export const authOptions = {
     async jwt({ token, user }: any) {
       if (user) {
         token.id = user.id;
+        token.email = user.email;
       }
       return token;
     },
     async session({ session, token }: any) {
-      if (session.user) {
+        if (session.user && token?.email) {
+          const userId = getUUIDFromEmail(token.email);
+          
+          try {
+            const result = await query(
+              `INSERT INTO users (id, email, name) VALUES ($1, $2, $3) 
+               ON CONFLICT (email) DO UPDATE SET name = $3
+               RETURNING *`,
+              [userId, token.email, session.user.name || 'User']
+            );
+            
+            console.log('✅ User result:', result.rows[0]);
+            session.user.id = userId;
+          } catch (error: any) {
+            console.error('❌ Error ensuring user exists:', error.message);
+          }
+        }
         
+        return session;
       }
-      return session;
-    },
   },
   session: {
     strategy: "jwt" as const,

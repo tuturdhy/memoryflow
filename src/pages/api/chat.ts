@@ -1,4 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+
+import { getUUIDFromEmail } from '@/lib/auth-utils';import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from './auth/[...nextauth]';
 import { AgentService } from '@/lib/agent/agentService';
@@ -17,7 +18,7 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const userId = session.user.email;
+  const userId = getUUIDFromEmail(session.user.email);
   const { message, conversationId } = req.body;
 
   if (!message) {

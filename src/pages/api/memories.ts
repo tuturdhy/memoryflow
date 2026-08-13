@@ -1,4 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+
+import { getUUIDFromEmail } from '@/lib/auth-utils';import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from './auth/[...nextauth]';
 import { query } from '@/lib/db/connection';
@@ -14,7 +15,7 @@ export default async function handler(
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const userId = session.user.email;
+  const userId = getUUIDFromEmail(session.user.email);
 
   try {
     if (req.method === 'GET') {

@@ -1,3 +1,4 @@
+import { getUUIDFromEmail } from '@/lib/auth-utils';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]';
@@ -13,7 +14,7 @@ export default async function handler(
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const userId = session.user.email;  // ✅ correct!
+  const userId = getUUIDFromEmail(session.user.email);
   const { id } = req.query;
 
   if (!id || typeof id !== 'string') {

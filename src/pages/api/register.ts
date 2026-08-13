@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { query } from "@/lib/db/connection";
+import { getUUIDFromEmail } from "@/lib/auth-utils";
 import bcrypt from "bcryptjs";
-import { v4 as uuidv4 } from "uuid";
 
 export default async function handler(
   req: NextApiRequest,
@@ -41,21 +41,29 @@ export default async function handler(
 
     // تشفير كلمة المرور
     const passwordHash = await bcrypt.hash(password, 10);
-    const userId = uuidv4();
+    const userId = getUUIDFromEmail(email);  // ✅ USE DETERMINISTIC UUID
 
     // إنشاء المستخدم
-    await query(
+    const result = await query(
       `INSERT INTO users (id, email, name, password_hash)
-       VALUES ($1, $2, $3, $4)`,
+       VALUES ($1, $2, $3, $4)
+       RETURNING id, email, name`,
       [userId, email, name || "User", passwordHash]
     );
 
     return res.status(201).json({
       message: "تم التسجيل بنجاح",
-      userId,
+      user: result.rows[0],
     });
   } catch (error: any) {
     console.error("Register error:", error);
+    
+    if (error.code === '23505') {
+      return res.status(400).json({
+        error: "البريد الإلكتروني مستخدم بالفعل",
+      });
+    }
+
     return res.status(500).json({
       error: "خطأ في التسجيل",
       details: error.message,
